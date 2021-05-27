@@ -1,4 +1,4 @@
-package it.polito.tdp.PremierLeague.model;
+ package it.polito.tdp.PremierLeague.model;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -89,5 +89,9 @@ public class Model {
 
 	public Graph<Player, DefaultWeightedEdge> getGrafo() {
 		return this.grafo;
+	}
+	
+	public String getTeamFromPlayer(Player p, Match m) {
+		return this.dao.getTeamFromPlayer(p, m);
 	}
 }

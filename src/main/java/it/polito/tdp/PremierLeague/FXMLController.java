@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.PremierLeague.model.Match;
 import it.polito.tdp.PremierLeague.model.Model;
+import it.polito.tdp.PremierLeague.model.Simulator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextField;
 public class FXMLController {
 
 	private Model model;
+	private Simulator sim;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -74,7 +76,26 @@ public class FXMLController {
     
     @FXML
     void doSimula(ActionEvent event) {
-
+    	if(this.model.getGrafo() == null) {
+    		this.txtResult.setText("Crea prima il grafo!");
+    		return;
+    	}
+    	else {
+	    	String ns = this.txtN.getText();
+	    	Match m = this.cmbMatch.getValue();
+	    	try {
+	    		int N = Integer.parseInt(ns);
+	    		this.sim.init(m, N);
+	    		this.sim.run();
+	    		this.txtResult.appendText("\n\n"+m.getTeamHomeNAME()+" "+this.sim.gethGoal()+"-"+this.sim.getaGoal()+" "+m.getTeamAwayNAME());
+	    		this.txtResult.appendText("\nEspulsioni "+m.getTeamHomeNAME()+": "+this.sim.gethReds());
+	    		this.txtResult.appendText("\nEspulsioni "+m.getTeamAwayNAME()+": "+this.sim.getaReds());
+	    	}
+	    	catch(NumberFormatException nfe) {
+	    		this.txtResult.setText("Inserire un intero");
+	    		return;
+	    	}
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -90,6 +111,7 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.sim = new Simulator(model);
     	this.cmbMatch.getItems().addAll(this.model.listAllMatches());
     }
 }
